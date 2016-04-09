@@ -50,3 +50,12 @@ function parseSearch(data) {
 function parseTranslate(data) {
   return JSON.parse(data).text.replace(/ [#|@]/g, ' ')
 }
+
+// Reposting translated tweets matching nyuadhack query
+search(function(data) {
+  var ids = parseSearch(data)
+  ids.forEach(translate.bind(null, function(data) {
+    var status = parseTranslate(data)
+    post(status)
+  }))
+})
