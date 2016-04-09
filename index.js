@@ -5,6 +5,10 @@ var config = require('./config.js')
 // Initializing a Twitter API client
 var twitter = new Twitter(config.twitter)
 
+// Initializing a hacky Twitter client
+var hackTwitter = new Twitter(config.twitter)
+hackTwitter.baseUrl = 'https://twitter.com/i'
+
 function post(status) {
   // Creating a tweet
   var tweet = {
@@ -14,11 +18,21 @@ function post(status) {
   twitter.postTweet(tweet, console.log, console.log)
 }
 
-// Creating a tweet search query
-var query = {
-  'q': 'nyuadhack -filter:retweets -filter:replies',
-  'result\_type': 'recent',
-  'count': 100
+function search(successCallback) {
+  // Creating a tweet search query
+  var query = {
+    'q': 'nyuadhack -filter:retweets -filter:replies',
+    'result\_type': 'recent',
+    'count': 100
+  }
+  // Searching for tweets matching the query
+  twitter.getSearch(query, console.log, successCallback)
 }
-// Searching for tweets matching the query
-twitter.getSearch(query, console.log, console.log)
+
+// Creating a translation query
+var query = {
+  dest: 'ar',
+  id: '717932486358089728'
+}
+// Translating a tweet
+hackTwitter.getCustomApiCall('/translations/show.json', query, console.log, console.log)
