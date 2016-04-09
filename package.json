@@ -1,0 +1,6 @@
+{
+  "name": "nyuad-hack-bot",
+  "dependencies": {
+    "twitter-node-client": "0.0.6"
+  }
+}
