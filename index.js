@@ -29,10 +29,24 @@ function search(successCallback) {
   twitter.getSearch(query, console.log, successCallback)
 }
 
-// Creating a translation query
-var query = {
-  dest: 'ar',
-  id: '717932486358089728'
+function translate(successCallback, id) {
+  // Creating a translation query
+  var query = {
+    dest: 'ar',
+    id: id
+  }
+  // Translating a tweet
+  hackTwitter.getCustomApiCall('/translations/show.json', query, console.log, successCallback)
 }
-// Translating a tweet
-hackTwitter.getCustomApiCall('/translations/show.json', query, console.log, console.log)
+
+// Parsing search response
+function parseSearch(data) {
+  return JSON.parse(data).statuses.map(function(status) {
+    return status.id_str
+  })
+}
+
+// Parsing translate response
+function parseTranslate(data) {
+  return JSON.parse(data).text.replace(/ [#|@]/g, ' ')
+}
