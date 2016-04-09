@@ -9,6 +9,8 @@ var twitter = new Twitter(config.twitter)
 var hackTwitter = new Twitter(config.twitter)
 hackTwitter.baseUrl = 'https://twitter.com/i'
 
+var last
+
 function post(status) {
   // Creating a tweet
   var tweet = {
@@ -19,9 +21,11 @@ function post(status) {
 }
 
 function search(successCallback) {
+  // Adding last ID filter
+  var lastFilter = last ? (' since\_id:' + last) : ''
   // Creating a tweet search query
   var query = {
-    'q': 'nyuadhack -filter:retweets -filter:replies',
+    'q': '#nyuadhack -filter:retweets -filter:replies' + lastFilter,
     'result\_type': 'recent',
     'count': 100
   }
@@ -51,11 +55,18 @@ function parseTranslate(data) {
   return JSON.parse(data).text.replace(/ [#|@]/g, ' ')
 }
 
-// Reposting translated tweets matching nyuadhack query
-search(function(data) {
-  var ids = parseSearch(data)
-  ids.forEach(translate.bind(null, function(data) {
-    var status = parseTranslate(data)
-    post(status)
-  }))
-})
+function run() {
+  // Reposting translated tweets matching nyuadhack query
+  search(function(data) {
+    var ids = parseSearch(data)
+    last = ids[0] || last
+    ids.forEach(translate.bind(null, function(data) {
+      var status = parseTranslate(data)
+      'Could not translate Tweet' !== status && post(status)
+    }))
+  })
+}
+
+// Run the bot every minute
+run()
+setInterval(run, 10 * 1000)
