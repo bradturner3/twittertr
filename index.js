@@ -69,4 +69,4 @@ function run() {
 
 // Run the bot every minute
 run()
-setInterval(run, 10 * 1000)
+setInterval(run, 60 * 1000)
