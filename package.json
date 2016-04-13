@@ -1,5 +1,8 @@
 {
   "name": "nyuad-hack-bot",
+  "scripts": {
+      "start": "node index.js"
+  },
   "dependencies": {
     "twitter-node-client": "0.0.6"
   }
